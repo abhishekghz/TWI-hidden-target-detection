@@ -6,7 +6,7 @@ Data collected on **03-06-2023** using a 2-port Anritsu VNA and a Vivaldi antenn
 ## Repository Structure
 
 - **data colection/**: Raw scan folders (MATLAB `.mat` files)
-- **README_with_tables.md**: Dataset metadata and tables (this file)
+- **README_with_tables.md**: Dataset metadata and tables
 
 ## Experimental Setup
 
@@ -64,4 +64,3 @@ If you use this dataset, please cite this repository.
 ## License
 
 Add your preferred license here (e.g., MIT, CC BY 4.0).
-
