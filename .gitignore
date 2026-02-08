@@ -1,2 +1,9 @@
 .DS_Store
 *.docx
+data/raw/**/*.csv
+outputs/**
+data/processed/**
+data/26/**
+data/36/**
+data/46/**
+data/56/**

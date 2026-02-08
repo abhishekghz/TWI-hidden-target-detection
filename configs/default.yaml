@@ -1,0 +1,15 @@
+training:
+  batch_size: 32
+  epochs: 20
+  learning_rate: 0.001
+data:
+  base_folder: data/36
+  mat_key: dataMeasured1
+  set_filter: single
+model:
+  in_channels: auto
+  num_classes: 3
+  dropout: 0.2
+music:
+  num_sources: 1
+  n_fft: 256
