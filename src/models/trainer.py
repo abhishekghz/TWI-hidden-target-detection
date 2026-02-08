@@ -25,6 +25,7 @@ class Trainer:
         self.model.to(self.device)
         self.model.train()
         last_loss = 0.0
+        loss_history = []
         for _ in range(self.cfg.epochs):
             running = 0.0
             for x, y in train_loader:
@@ -37,4 +38,5 @@ class Trainer:
                 self.optimizer.step()
                 running += loss.item()
             last_loss = running / max(len(train_loader), 1)
-        return {"loss": last_loss}
+            loss_history.append(last_loss)
+        return {"loss": last_loss, "loss_history": loss_history}

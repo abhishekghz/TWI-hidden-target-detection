@@ -2,6 +2,7 @@ from pathlib import Path
 import json
 import yaml
 import torch
+import matplotlib.pyplot as plt
 from torch.utils.data import DataLoader, random_split
 
 from src.config import METADATA_CSV, OUTPUTS_DIR, FIGURES_DIR, MODELS_DIR, LOGS_DIR
@@ -101,6 +102,7 @@ def main() -> None:
 
     metrics_out = {
         "train_loss": metrics["loss"],
+        "loss_history": metrics["loss_history"],
         "accuracy": acc,
         "precision": prf["precision"],
         "recall": prf["recall"],
@@ -108,6 +110,15 @@ def main() -> None:
         "labels": labels_sorted,
     }
     (LOGS_DIR / "metrics.json").write_text(json.dumps(metrics_out, indent=2))
+
+    fig, ax = plt.subplots(figsize=(6, 3))
+    ax.plot(metrics["loss_history"], marker="o")
+    ax.set_title("Training Loss")
+    ax.set_xlabel("Epoch")
+    ax.set_ylabel("Loss")
+    fig.tight_layout()
+    fig.savefig(FIGURES_DIR / "training_loss.png")
+    plt.close(fig)
 
     plot_confusion_matrix(labels_sorted, cm_matrix, FIGURES_DIR / "confusion_matrix.png")
 
