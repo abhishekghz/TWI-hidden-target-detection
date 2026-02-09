@@ -22,6 +22,7 @@ st.title("Through‑Wall Imaging: Hidden Target Detection")
 
 st.sidebar.header("Model")
 model_path = st.sidebar.text_input("Model path", value=str(ROOT / "outputs" / "models" / "best_model_nb.pt"))
+model_upload = st.sidebar.file_uploader("Upload model (.pt)", type=["pt"])
 
 st.sidebar.header("Input")
 uploaded = st.sidebar.file_uploader("Upload .mat file", type=["mat"])
@@ -32,7 +33,16 @@ num_sources = st.sidebar.slider("MUSIC sources", 1, 3, 1)
 fft_bins = st.sidebar.selectbox("MUSIC FFT bins", [128, 256, 512], index=1)
 
 @st.cache_resource
-def load_model(path: str, in_channels: int, num_classes: int):
+def load_model_from_bytes(model_bytes: bytes, in_channels: int, num_classes: int):
+    model = CNN1D(in_channels=in_channels, num_classes=num_classes)
+    state = torch.load(model_bytes, map_location="cpu")
+    model.load_state_dict(state)
+    model.eval()
+    return model
+
+
+@st.cache_resource
+def load_model_from_path(path: str, in_channels: int, num_classes: int):
     model = CNN1D(in_channels=in_channels, num_classes=num_classes)
     state = torch.load(path, map_location="cpu")
     model.load_state_dict(state)
@@ -76,8 +86,18 @@ label_map = material_label_map(metadata[metadata["material"].notna()])
 inv_label = {v: k for k, v in label_map.items()}
 
 in_channels = 2 if np.iscomplexobj(clean) else 1
+model = None
 try:
-    model = load_model(model_path, in_channels, num_classes=len(label_map))
+    if model_upload is not None:
+        model = load_model_from_bytes(model_upload.getvalue(), in_channels, num_classes=len(label_map))
+    else:
+        model = load_model_from_path(model_path, in_channels, num_classes=len(label_map))
+except FileNotFoundError:
+    st.warning("Model file not found. Upload a .pt model or update the model path.")
+except Exception as exc:
+    st.error(f"Failed to load model: {exc}")
+
+if model is not None:
     if np.iscomplexobj(clean):
         x = np.stack([clean.real, clean.imag], axis=0)
     else:
@@ -89,5 +109,3 @@ try:
     st.subheader("Predicted Target")
     st.write(pred)
     st.bar_chart({inv_label[i]: float(probs[i]) for i in range(len(probs))})
-except FileNotFoundError:
-    st.warning("Model file not found. Train a model first or update the model path.")
