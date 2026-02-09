@@ -82,6 +82,14 @@ Generated artifacts are saved under **outputs/**:
 - **outputs/logs/**: metrics and run summaries
 - **outputs/logs/predictions.json**: predictions for Set 1/2/3
 
+## Web App (Streamlit)
+
+Run the GUI locally:
+
+- `streamlit run app.py`
+
+Upload a `.mat` file to see raw/preprocessed signals, MUSIC spectrum, and predicted target.
+
 ## Citation
 
 If you use this dataset, please cite this repository.
