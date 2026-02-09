@@ -5,3 +5,4 @@ scipy
 pyyaml
 torch
 streamlit
+altair==4.2.2
