@@ -90,6 +90,8 @@ Run the GUI locally:
 
 Upload a `.mat` file to see raw/preprocessed signals, MUSIC spectrum, and predicted target.
 
+Live app: https://twi-hidden-target-detection-7100.streamlit.app
+
 ## Citation
 
 If you use this dataset, please cite this repository.
